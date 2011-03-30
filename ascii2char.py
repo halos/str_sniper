@@ -2,23 +2,28 @@
 # -*- coding: utf-8 -*-
 
 import re
+import sys
 import binascii
+
+lines = sys.stdin.readlines()
 
 # checks if the entire string is hex ascii
 
-pattern = r'^([a-fA-F0-9]+)$'
+ascii_pattern = r'^([a-fA-F0-9]+)$'
 
-cad = raw_input()
+for line in lines:
+	
+	line = line[:-1]
+	
+	if (re.match(ascii_pattern, line) is not None) and (len(line) % 2 == 0):
+		
+		chars_pattern = r'([a-fA-F0-9]{2})'
 
-if re.match(pattern, cad):
+		chars = re.findall(chars_pattern, line)
 
-	pattern = r'([a-fA-F0-9]{2})'
+		line = ''
 
-	chars = re.findall(pattern, cad)
+		for i in chars:
+			line += binascii.a2b_hex(i)
 
-	cad = ''
-
-	for i in chars:
-		cad += binascii.a2b_hex(i)
-
-print cad
+	print line
